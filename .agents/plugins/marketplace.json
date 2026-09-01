@@ -1,0 +1,15 @@
+{
+  "name": "nomadmd-plugins",
+  "interface": {
+    "displayName": "NomadMD Plugins"
+  },
+  "plugins": [
+    {
+      "name": "nomadmd-analytics",
+      "source": {
+        "source": "local",
+        "path": "./plugins/nomadmd-analytics"
+      }
+    }
+  ]
+}

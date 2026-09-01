@@ -20,7 +20,17 @@ claude plugin marketplace add https://github.com/nomad-md/claude-plugins.git
 claude plugin install nomadmd-analytics@nomadmd-plugins
 ```
 
-While this repository is private, your git client must be able to authenticate to it non-interactively — e.g. run `gh auth setup-git` once, or have a stored github.com credential with access.
+Or add the marketplace from the `/plugin` menu inside Claude Code using the same URL.
+
+## Install (OpenAI Codex / ChatGPT)
+
+This repository also ships the Codex-native layout (`.agents/plugins/marketplace.json` + `.codex-plugin/`), so the same URL works there:
+
+```bash
+codex plugin marketplace add https://github.com/nomad-md/claude-plugins.git
+```
+
+Then install **NomadMD Analytics** from the plugins/marketplace section in the ChatGPT desktop app (or `codex plugin marketplace list` to confirm it registered).
 
 ## Using it outside Claude Code
 
@@ -29,6 +39,10 @@ The plugin content is harness-agnostic; only the `.claude-plugin/` metadata is C
 - `skills/*/SKILL.md` — agent instructions in plain Markdown. Mount them in your harness's instruction mechanism (AGENTS.md-style files, custom instructions, or skill/tool registries).
 - `reference/` — the event reference, legacy-migration guide, customer guide, GTM dataLayer reference, consent-token spec, two Segment Protocols tracking plans (JSON), and two importable GTM container templates.
 - `scripts/` — zero-dependency Node.js (ESM) utilities for the Segment Public API. Token via the `SEGMENT_PUBLIC_API_TOKEN` env var or `--token-file`; dry-run by default.
+
+## License & status
+
+© NomadMD. All rights reserved. You're welcome to install and use this plugin to set up analytics for your own NomadMD-powered marketplace. Formal license terms will follow; until then, please don't redistribute modified copies. Configurations you choose to apply are your own responsibility — see the [guardrails](plugins/nomadmd-analytics/guardrails/) risk register and disclaimer.
 
 ## Provenance
 

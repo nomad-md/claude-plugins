@@ -1,0 +1,15 @@
+{
+  "name": "nomadmd-analytics",
+  "version": "2.2.0",
+  "description": "Agent-guided Segment v2 / GTM analytics setup for NomadMD brands: decision-matrix interview, Segment workspace configuration via the brand's own Public API token, legacy-migration support, and event validation against the bundled tracking plans.",
+  "skills": "./skills",
+  "author": {
+    "name": "NomadMD"
+  },
+  "repository": "https://github.com/nomad-md/claude-plugins",
+  "keywords": ["analytics", "segment", "gtm", "onboarding", "nomadmd"],
+  "interface": {
+    "displayName": "NomadMD Analytics",
+    "shortDescription": "Agent-guided Segment v2 / GTM setup for NomadMD brands"
+  }
+}
