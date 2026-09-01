@@ -1,0 +1,15 @@
+{
+  "type": "track",
+  "event": "Signed In",
+  "userId": "mu_123",
+  "context": {
+    "schema_version": "1.0",
+    "app": { "name": "dispatch-api", "version": "abc1234" },
+    "source": "server"
+  },
+  "properties": {
+    "marketplace_id": "42",
+    "method": "magic-link",
+    "email": "leak@example.com"
+  }
+}

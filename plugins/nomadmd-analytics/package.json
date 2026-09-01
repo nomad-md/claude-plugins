@@ -1,0 +1,9 @@
+{
+  "name": "nomadmd-analytics-plugin",
+  "private": true,
+  "type": "module",
+  "description": "Test harness for the nomadmd-analytics Claude plugin's bundled scripts. Zero runtime dependencies — the scripts run standalone on any Node >= 20.",
+  "scripts": {
+    "test": "node --test 'tests/*.test.js'"
+  }
+}

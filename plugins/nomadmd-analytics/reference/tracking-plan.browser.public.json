@@ -1,0 +1,2378 @@
+{
+  "name": "NomadMD Segment v2 Tracking Plan — browser stream",
+  "description": "NomadMD Segment integration v2, browser-stream events (schema_version 2.0) — attach to your JavaScript source. Matches the \"Segment v2 — Event & Schema Reference\" documentation. Import into your workspace via Segment's Public API (Tracking Plans), or use as a JSON Schema reference. Generated — do not edit.",
+  "rules": [
+    {
+      "type": "IDENTIFY",
+      "key": "",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "properties": {},
+          "traits": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              },
+              "first_name": {
+                "type": "string"
+              },
+              "last_name": {
+                "type": "string"
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "marketplace_group_id": {
+                "description": "account/login umbrella (home scope)",
+                "type": "integer"
+              },
+              "signup_marketplace_id": {
+                "description": "brand first signed up through — set once, NOT a 'belongs to'",
+                "type": "integer"
+              },
+              "client_profile_id": {
+                "description": "primary care record (legacy typo clientProfielId fixed)",
+                "type": "integer"
+              },
+              "client_profile_ids": {
+                "description": "all care records under the account",
+                "type": "array"
+              },
+              "birthday": {
+                "type": "string"
+              },
+              "age": {
+                "type": "integer"
+              },
+              "sex_assigned_at_birth": {
+                "type": "string"
+              },
+              "service_region": {
+                "description": "coarse geo — never full address",
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              },
+              "membership_status": {
+                "type": "string"
+              },
+              "membership_name": {
+                "type": "string"
+              },
+              "package_credits_remaining": {
+                "description": "current unexpired credit balance on the account — point-in-time state for segmentation (churn-risk/upsell audiences); the ledger is the events (grants on Membership Started/Renewed + Package Purchased, burns on Package Credit Redeemed). Brand-scoped at the receiving source: credits from THIS brand's packages only",
+                "type": "number"
+              },
+              "lifetime_appointments": {
+                "description": "Account-grain lifetime appointment count, computed within your brand only.",
+                "type": "integer"
+              },
+              "lifetime_revenue": {
+                "description": "Account-grain lifetime revenue, computed within your brand only.",
+                "type": "number"
+              },
+              "is_new_customer": {
+                "description": "POINT-IN-TIME STATE: lifetime_appointments == 0. False immediately after the first booking — BY DESIGN. 'Was this customer new at the time of appointment X' is answered by the EVENT properties is_new_customer / prior_appointment_count, never by this trait",
+                "type": "boolean"
+              },
+              "marketing_sms_opt_in": {
+                "description": "from marketplaceUsers.phoneOptIn",
+                "type": "boolean"
+              },
+              "marketing_email_opt_in": {
+                "description": "from marketplaceUsers.emailOptIn",
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "PAGE",
+      "key": "",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Funnel route change (checkout-web).",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "name": {
+                "type": "string",
+                "enum": [
+                  "Location",
+                  "Services",
+                  "Schedule",
+                  "Confirm",
+                  "Success"
+                ]
+              }
+            },
+            "required": ["name", "marketplace_id"],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Marketplace Opened",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "First route hit for a brand in a session",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "entry_path": {
+                "type": "string"
+              },
+              "referrer": {
+                "type": "string"
+              },
+              "utm_source": {
+                "type": "string"
+              },
+              "utm_medium": {
+                "type": "string"
+              },
+              "utm_campaign": {
+                "type": "string"
+              },
+              "utm_term": {
+                "type": "string"
+              },
+              "utm_content": {
+                "type": "string"
+              },
+              "is_returning_visitor": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "entry_path",
+              "is_returning_visitor"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Service List Viewed",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "/services renders the brand catalog",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "list_id": {
+                "type": "string",
+                "enum": ["services"]
+              },
+              "products": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "product_id": {},
+                    "name": {},
+                    "category": {},
+                    "price": {}
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "product_count": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "list_id",
+              "products",
+              "product_count"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Location Selected",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Location step completed (or skipped)",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "location_type": {
+                "type": "string",
+                "enum": ["in_home", "in_clinic"]
+              },
+              "service_region": {
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              },
+              "was_skipped": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "location_type",
+              "was_skipped"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Service Viewed",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "ProcedureDialog opens for a catalog item",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "product_id": {
+                "description": "= procedure_base_definition_id",
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "add_on_count": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "product_id",
+              "name",
+              "price"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Service Added",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Procedure (with add-ons) added to selection",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "product_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "quantity": {
+                "type": "integer"
+              },
+              "add_on_ids": {
+                "type": "array"
+              },
+              "cart_value": {
+                "type": "number"
+              },
+              "cart_size": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "product_id",
+              "name",
+              "price",
+              "quantity",
+              "cart_value",
+              "cart_size"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Service Removed",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Procedure removed from selection",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "product_id": {
+                "type": "string"
+              },
+              "cart_value": {
+                "type": "number"
+              },
+              "cart_size": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "product_id",
+              "cart_value",
+              "cart_size"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Availability Viewed",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "/schedule slots load",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "product_ids": {
+                "type": "array"
+              },
+              "date_range_start_at": {
+                "type": "string"
+              },
+              "slot_count": {
+                "type": "integer"
+              },
+              "has_availability": {
+                "description": "false rows are the supply-gap signal",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "product_ids",
+              "slot_count",
+              "has_availability"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Time Slot Selected",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Exact slot chosen (specific_time mode)",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "booking_mode": {
+                "type": "string",
+                "enum": ["specific_time"]
+              },
+              "scheduled_start_at": {
+                "type": "string"
+              },
+              "lead_time_days": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "booking_mode",
+              "scheduled_start_at",
+              "lead_time_days"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Waitlist Selected",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Window/waitlist chosen (window mode)",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "booking_mode": {
+                "type": "string",
+                "enum": ["window"]
+              },
+              "window_count": {
+                "type": "integer"
+              },
+              "times_of_day": {
+                "type": "array"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "booking_mode",
+              "window_count",
+              "times_of_day"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Checkout Started",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "/confirm reached; client mints checkout_session_id here",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "checkout_session_id": {
+                "description": "client-minted uuid — stamped on every checkout event",
+                "type": "string"
+              },
+              "value": {
+                "type": "number"
+              },
+              "products": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "product_id": {},
+                    "name": {},
+                    "category": {},
+                    "price": {},
+                    "quantity": {},
+                    "add_on_ids": {}
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "product_count": {
+                "type": "integer"
+              },
+              "currency": {
+                "type": "string",
+                "enum": ["USD"]
+              },
+              "booking_mode": {
+                "type": "string",
+                "enum": ["specific_time", "window"]
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "checkout_session_id",
+              "value",
+              "products",
+              "product_count",
+              "currency",
+              "booking_mode"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Checkout Step Viewed",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Wizard step shown",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "checkout_session_id": {
+                "type": "string"
+              },
+              "step": {
+                "type": "integer"
+              },
+              "step_name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "checkout_session_id",
+              "step",
+              "step_name"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Checkout Step Completed",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Wizard step completed",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "checkout_session_id": {
+                "type": "string"
+              },
+              "step": {
+                "type": "integer"
+              },
+              "step_name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "checkout_session_id",
+              "step",
+              "step_name"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Sign In Started",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Auth flow opens",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "method_options": {
+                "type": "array"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "method_options"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Passcode Requested",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "OTP requested",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "method": {
+                "type": "string",
+                "enum": ["passcode"]
+              }
+            },
+            "required": ["marketplace_id", "marketplace_group_id", "method"],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Passcode Submitted",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "OTP submitted",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "method": {
+                "type": "string",
+                "enum": ["passcode"]
+              },
+              "succeeded": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "method",
+              "succeeded"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Signed In",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Auth success — triggers identify() + alias(anonymousId -> mu_) on client",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "method": {
+                "type": "string",
+                "enum": ["passcode", "password", "google", "apple"]
+              }
+            },
+            "required": ["marketplace_id", "marketplace_group_id", "method"],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Account Created",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "New marketplace_user registered — exactly ONE group-scoped identify(); signup_marketplace_id trait set once",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "method": {
+                "type": "string",
+                "enum": ["passcode", "password", "google", "apple"]
+              }
+            },
+            "required": ["marketplace_id", "marketplace_group_id", "method"],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Coupon Entered",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Promo code typed",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "checkout_session_id": {
+                "type": "string"
+              },
+              "coupon_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "checkout_session_id",
+              "coupon_id"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Coupon Applied",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Promo code accepted",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "checkout_session_id": {
+                "type": "string"
+              },
+              "coupon_id": {
+                "type": "string"
+              },
+              "discount": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "checkout_session_id",
+              "coupon_id",
+              "discount"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Coupon Denied",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Promo code rejected",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "checkout_session_id": {
+                "type": "string"
+              },
+              "coupon_id": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "checkout_session_id",
+              "coupon_id",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Membership Viewed",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Membership upsell shown in checkout",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "membership_definition_id": {
+                "type": "integer"
+              },
+              "membership_name": {
+                "type": "string"
+              },
+              "membership_price": {
+                "type": "number"
+              },
+              "membership_period": {
+                "type": "string",
+                "enum": ["monthly", "quarterly", "yearly"]
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "membership_definition_id",
+              "membership_name",
+              "membership_price",
+              "membership_period"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Membership Added",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Membership selected into the order",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "membership_definition_id": {
+                "type": "integer"
+              },
+              "membership_name": {
+                "type": "string"
+              },
+              "membership_price": {
+                "type": "number"
+              },
+              "membership_period": {
+                "type": "string",
+                "enum": ["monthly", "quarterly", "yearly"]
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "membership_definition_id",
+              "membership_name",
+              "membership_price",
+              "membership_period"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Gratuity Added",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Tip chosen",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "gratuity_type": {
+                "type": "string",
+                "enum": ["percent", "custom"]
+              },
+              "gratuity_value": {
+                "type": "number"
+              },
+              "gratuity_amount": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "gratuity_type",
+              "gratuity_value",
+              "gratuity_amount"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Payment Info Entered",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Payment method set",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "checkout_session_id": {
+                "type": "string"
+              },
+              "payment_method": {
+                "type": "string",
+                "enum": ["card", "apple_pay", "saved_card"]
+              },
+              "is_saved_instrument": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "checkout_session_id",
+              "payment_method",
+              "is_saved_instrument"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Order Completed",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "Booking submitted — the canonical conversion. Fires at request submission as booked value; kept honest by Order Updated / Order Cancelled, with cash truth in the payment-ledger events. Also emitted standalone for membership/package purchases and renewals (order_id membership_<id> / package_<id>) — never doubled when bundled inside a booking checkout.",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "order_id": {
+                "description": "= appointment_request_id (or membership_<id>/package_<id>)",
+                "type": "string"
+              },
+              "created_via": {
+                "description": "Origin surface of the creation: consumer checkout, admin dashboard, field app, or API.",
+                "type": "string",
+                "enum": [
+                  "consumer_checkout",
+                  "dispatch_admin",
+                  "mobile_field",
+                  "api"
+                ]
+              },
+              "created_by": {
+                "description": "actor TYPE who created it — patient for self-serve, staff type otherwise; complements created_via (surface)",
+                "type": "string",
+                "enum": ["patient", "practitioner", "admin", "system"]
+              },
+              "created_by_user_id": {
+                "description": "staff users.id when staff-created; omitted for patient self-serve — the event userId already identifies the creator",
+                "type": "integer"
+              },
+              "checkout_session_id": {
+                "description": "PRESENT AND NULLABLE on the server stream from day one (phase 1 emits null until the client pass-through ships in phase 2); non-null on client stream",
+                "type": ["string", "null"]
+              },
+              "checkout_id": {
+                "description": "server-generated at order creation",
+                "type": "integer"
+              },
+              "appointment_id": {
+                "description": "null while request is pending_approval",
+                "type": ["integer", "null"]
+              },
+              "affiliation": {
+                "description": "brand name, ecommerce-spec field",
+                "type": "string"
+              },
+              "revenue": {
+                "type": "number"
+              },
+              "discount": {
+                "type": "number"
+              },
+              "tax": {
+                "type": "number"
+              },
+              "gratuity_amount": {
+                "type": "number"
+              },
+              "travel_fee": {
+                "type": "number"
+              },
+              "other_items_total": {
+                "type": "number"
+              },
+              "total": {
+                "type": "number"
+              },
+              "amount_due_now": {
+                "description": "what checkout displayed as due at booking",
+                "type": "number"
+              },
+              "collection_method": {
+                "type": "string",
+                "enum": [
+                  "collect_on_site",
+                  "collect_deposit",
+                  "collect_on_confirmation"
+                ]
+              },
+              "currency": {
+                "type": "string",
+                "enum": ["USD"]
+              },
+              "coupon": {
+                "type": "string"
+              },
+              "payment_method": {
+                "type": "string",
+                "enum": [
+                  "card",
+                  "apple_pay",
+                  "saved_card",
+                  "cash",
+                  "payment_link"
+                ]
+              },
+              "booking_mode": {
+                "type": "string",
+                "enum": ["specific_time", "window"]
+              },
+              "requires_approval": {
+                "type": "boolean"
+              },
+              "appointment_status": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "booked",
+                  "completed",
+                  "cancelled",
+                  "noshow"
+                ]
+              },
+              "is_new_customer": {
+                "description": "brand-scoped, account-grain",
+                "type": "boolean"
+              },
+              "prior_appointment_count": {
+                "description": "Prior appointments for this customer at your brand, counted before the current one.",
+                "type": "integer"
+              },
+              "membership_purchased": {
+                "type": "boolean"
+              },
+              "package_credit_applied": {
+                "type": "number"
+              },
+              "products": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "product_id": {},
+                    "name": {},
+                    "category": {},
+                    "price": {},
+                    "quantity": {},
+                    "add_on_ids": {}
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "is_group_appointment": {
+                "description": "true when this order books >1 patient on a shared group checkout; server always emits",
+                "type": "boolean"
+              },
+              "group_id": {
+                "description": "UUID shared by the group's appointments; null for solo",
+                "type": ["string", "null"]
+              },
+              "group_size": {
+                "description": "patients on the shared checkout (1 for solo); revenue/total are the group total, not per-member",
+                "type": "integer"
+              },
+              "location_type": {
+                "description": "Care setting for the visit.",
+                "type": "string",
+                "enum": ["in_home", "in_clinic"]
+              },
+              "service_region": {
+                "description": "coarse geo — NEVER full address",
+                "type": "string"
+              },
+              "postal_code": {
+                "description": "coarse geo",
+                "type": "string"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "order_id",
+              "created_via",
+              "created_by",
+              "checkout_session_id",
+              "checkout_id",
+              "appointment_id",
+              "affiliation",
+              "revenue",
+              "discount",
+              "tax",
+              "gratuity_amount",
+              "travel_fee",
+              "other_items_total",
+              "total",
+              "amount_due_now",
+              "collection_method",
+              "currency",
+              "booking_mode",
+              "requires_approval",
+              "appointment_status",
+              "is_new_customer",
+              "prior_appointment_count",
+              "membership_purchased",
+              "package_credit_applied",
+              "products"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "type": "TRACK",
+      "key": "Checkout Failed",
+      "version": 1,
+      "jsonSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "createAppointmentRequest errors",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string",
+                "enum": ["2.0"]
+              },
+              "app": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "version"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["client", "server"]
+              },
+              "groupId": {
+                "type": "string"
+              }
+            },
+            "required": ["schema_version", "app", "source"]
+          },
+          "traits": {},
+          "properties": {
+            "type": "object",
+            "properties": {
+              "marketplace_id": {
+                "description": "the brand (via procedureBaseDefs[0].marketplaceId for appointments)",
+                "type": "integer"
+              },
+              "marketplace_group_id": {
+                "type": "integer"
+              },
+              "organization_id": {
+                "description": "where known",
+                "type": "integer"
+              },
+              "checkout_session_id": {
+                "description": "null on server stream until phase-2 pass-through, same as Order Completed",
+                "type": ["string", "null"]
+              },
+              "error_code": {
+                "type": "string"
+              },
+              "error_stage": {
+                "type": "string",
+                "enum": ["payment", "scheduling", "validation"]
+              },
+              "is_payment_declined": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "marketplace_id",
+              "marketplace_group_id",
+              "checkout_session_id",
+              "error_code",
+              "error_stage",
+              "is_payment_declined"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    }
+  ]
+}
